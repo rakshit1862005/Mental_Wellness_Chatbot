@@ -31,6 +31,7 @@ A supportive AI chatbot designed to provide mental wellness assistance through m
 ## Technology Stack
 
 ### Backend
+- **Node.js** - Backend Server For Chat Logging And Handling Login/Signup
 - **Python 3.8+** - Core programming language
 - **Flask 2.3+** - Web framework and API server
 - **SQLite** - Lightweight database for data persistence
