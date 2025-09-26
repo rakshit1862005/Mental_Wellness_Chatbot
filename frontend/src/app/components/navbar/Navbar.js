@@ -24,9 +24,9 @@ export default function Navbar() {
 
                 await sleep(holdDelay);
 
-                for (let i = text.length; i >= 0; i--) {
+                for (let i = text.length; i >= 1; i--) {
                     if (isCancelled) return;
-                    setHead(text.slice(0, i));
+                    setHead(text.slice(1, i));
                     await sleep(eraseDelay);
                 }
 
@@ -40,7 +40,9 @@ export default function Navbar() {
 
     return (
         <div className={styles.main}>
-            <div className={styles.logo}></div>
+            <div className={styles.logo}>
+                <img src={'./logo.svg'}></img>
+            </div>
             <div className={styles.logocont}>
                 <h2>MindWell</h2>
                 <h3>{head}</h3>
