@@ -1,0 +1,222 @@
+.crisisContainer {
+    background: #eef2f7;
+    min-height: 100vh;
+    padding: 140px 60px 60px 60px;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.warningBanner {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    border: 1px solid #ffcdd2;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.warningBanner svg {
+    color: #c62828;
+    min-width: 20px;
+    margin-top: 2px;
+}
+
+.warningTitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #c62828;
+    margin-bottom: 6px;
+}
+
+.warningSubtext {
+    font-size: 0.9rem;
+    color: #d32f2f;
+}
+
+.pageHeader {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.pageTitle {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 12px 0;
+}
+
+.pageSubtitle {
+    font-size: 1rem;
+    color: #8896a8;
+    margin: 0;
+}
+
+.section {
+    margin-bottom: 48px;
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 28px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sectionTitle svg {
+    color: #c62828;
+}
+
+.cardsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.resourceCard {
+    background: white;
+    border: 1px solid #e8edf2;
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.cardHeader h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #c62828;
+    margin: 0;
+    flex: 1;
+    line-height: 1.4;
+}
+
+.badge {
+    background: #ffebee;
+    color: #c62828;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    margin-left: 8px;
+}
+
+.badge svg {
+    width: 14px;
+    height: 14px;
+}
+
+.cardDescription {
+    font-size: 0.9rem;
+    color: #5a6c7d;
+    line-height: 1.6;
+    margin: 0 0 24px 0;
+    flex: 1;
+}
+
+.callButton {
+    background: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.callButton:hover {
+    background: #b71c1c;
+}
+
+.callButton svg {
+    width: 18px;
+    height: 18px;
+}
+
+.copingGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.copingCard {
+    background: linear-gradient(135deg, #e3f2fd 0%, #d6ebfa 100%);
+    border: 1px solid #bbdefb;
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.copingIcon {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1976d2;
+}
+
+.copingIcon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.copingCard h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1565c0;
+    margin: 0;
+}
+
+@media (max-width: 1200px) {
+    .cardsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .crisisContainer {
+        padding: 140px 20px 40px 20px;
+    }
+
+    .cardsGrid,
+    .copingGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .pageTitle {
+        font-size: 2rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.3rem;
+    }
+}

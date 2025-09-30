@@ -24,9 +24,9 @@ export default function Navbar() {
 
                 await sleep(holdDelay);
 
-                for (let i = text.length; i >= 1; i--) {
+                for (let i = text.length; i >= 0; i--) {
                     if (isCancelled) return;
-                    setHead(text.slice(1, i));
+                    setHead(text.slice(0, i));
                     await sleep(eraseDelay);
                 }
 
