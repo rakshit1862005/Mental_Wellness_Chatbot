@@ -5,49 +5,97 @@ import Menu from "@/app/components/menu/Menu";
 import styles from "./chat.module.css";
 
 export default function ChatPage() {
-    const systemprompt= `
-You are a compassionate and empathetic AI assistant designed to support the mental wellness of young adults. 
-Your role is to listen, validate feelings, and provide gentle coping strategies, self-care tips, or journaling prompts. 
-Keep your responses warm, encouraging, and non-judgmental. 
-Avoid medical advice or diagnosis—if the user seems to be in crisis, gently suggest seeking support from a trusted friend, family member, or mental health professional. 
-Keep your tone conversational, short, and supportive.
-`;
-    const [messages, setMessages] = useState([
-        {
-            sender: "assistant",
-            text: "Hello! I'm here to support your mental wellness journey. You can share how you're feeling, ask for coping strategies, or try journaling prompts. How are you doing today?",
-            time: "08:16 PM"
-        },
-        {
-            sender: "user",
-            text: ":( ",
-            time: "08:17 PM"
-        },
-        {
-            sender: "assistant",
-            text: "Thank you for sharing that with me. Your feelings are valid, and it's brave to express them.",
-            time: "08:17 PM"
-        }
-    ]);
+    const [sessionId, setSessionId] = useState(null);
+    const [sessions, setSessions] = useState([]);
+    const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const chatBoxRef = useRef(null);
 
-    // Scroll to bottom whenever messages change
+    // Initialize session
+    useEffect(() => {
+        let stored = localStorage.getItem("sessionId");
+        if (!stored) {
+            stored = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            localStorage.setItem("sessionId", stored);
+        }
+        setSessionId(stored);
+    }, []);
+
+    // Load session list
+    useEffect(() => {
+        const email = localStorage.getItem("username");
+        if (!email) return;
+
+        async function loadSessions() {
+            try {
+                const res = await fetch(`/api/gemini?email=${email}`);
+                const data = await res.json();
+                setSessions(data.sessions || []);
+            } catch (e) {
+                console.error("Failed to load sessions:", e);
+            }
+        }
+
+        loadSessions();
+    }, []);
+
+    // Load chats for current session
+    useEffect(() => {
+        if (!sessionId) return;
+
+        const email = localStorage.getItem("username");
+        if (!email) return;
+
+        async function loadChats() {
+            try {
+                const res = await fetch(`/api/gemini?email=${email}&sessionId=${sessionId}`);
+                const data = await res.json();
+
+                if (data.chats?.length) {
+                    const formatted = data.chats.map(c => ({
+                        sender: c.sender,
+                        text: c.text,
+                        time: new Date(c.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                    }));
+                    setMessages(formatted);
+                } else {
+                    setMessages([{
+                        sender: "assistant",
+                        text: `Hello! ${email}, I'm here to support your mental wellness journey. How are you feeling today?`,
+                        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                    }]);
+                }
+            } catch (e) {
+                console.error("Failed to load chats:", e);
+            }
+        }
+
+        loadChats();
+    }, [sessionId]);
+
+    // Auto scroll to bottom
     useEffect(() => {
         if (chatBoxRef.current) {
             chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
         }
     }, [messages, isLoading]);
 
+    // Send message
     const handleSend = async (e) => {
         e.preventDefault();
         if (!input.trim()) return;
 
+        const email = localStorage.getItem("username");
+        if (!email) {
+            alert("Please log in first");
+            return;
+        }
+
         const userMsg = {
             sender: "user",
             text: input,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         };
 
         setMessages(prev => [...prev, userMsg]);
@@ -58,7 +106,7 @@ Keep your tone conversational, short, and supportive.
             const res = await fetch("/api/gemini", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: (systemprompt+input) }),
+                body: JSON.stringify({ message: userMsg.text, sessionId, email }),
             });
 
             const data = await res.json();
@@ -66,10 +114,12 @@ Keep your tone conversational, short, and supportive.
             const assistantMsg = {
                 sender: "assistant",
                 text: data.reply || "I'm having trouble responding right now.",
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             };
 
             setMessages(prev => [...prev, assistantMsg]);
+            await refreshSessions();
+
         } catch (err) {
             console.error("Gemini error:", err);
             setMessages(prev => [
@@ -77,11 +127,65 @@ Keep your tone conversational, short, and supportive.
                 {
                     sender: "assistant",
                     text: "Something went wrong. Please try again later.",
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                },
+                    time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+                }
             ]);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    // Create new chat
+    const handleNewChat = () => {
+        const newId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem("sessionId", newId);
+        setSessionId(newId);
+
+        const email = localStorage.getItem("username");
+        setMessages([{
+            sender: "assistant",
+            text: `Hello! ${email}, how are you feeling today?`,
+            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        }]);
+    };
+
+    // Switch to another session
+    const switchToSession = (sid) => {
+        localStorage.setItem("sessionId", sid);
+        setSessionId(sid);
+    };
+
+    // Delete session
+    const handleDeleteSession = async (sid) => {
+        const email = localStorage.getItem("username");
+        if (!email) return;
+
+        if (!confirm("Delete this chat? This cannot be undone.")) return;
+
+        try {
+            await fetch("/api/gemini", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, sessionId: sid })
+            });
+
+            await refreshSessions();
+            if (sid === sessionId) handleNewChat();
+        } catch (e) {
+            console.error("Failed to delete session:", e);
+        }
+    };
+
+    // Refresh sessions list
+    const refreshSessions = async () => {
+        const email = localStorage.getItem("username");
+        if (!email) return;
+        try {
+            const res = await fetch(`/api/gemini?email=${email}`);
+            const data = await res.json();
+            setSessions(data.sessions || []);
+        } catch (e) {
+            console.error("refreshSessions error:", e);
         }
     };
 
@@ -89,7 +193,51 @@ Keep your tone conversational, short, and supportive.
         <div className={styles.pageContainer}>
             <Navbar />
             <Menu />
+
             <div className={styles.main}>
+                {/* Sidebar */}
+                <aside className={styles.sidebar}>
+                    <div className={styles.sidebarHeader}>
+                        <h3>Chats</h3>
+                        <button onClick={handleNewChat} className={styles.newChatBtn}>
+                            New
+                        </button>
+                    </div>
+
+                    <div className={styles.sessionsList}>
+                        {sessions.length === 0 && (
+                            <div className={styles.noSessions}>No saved chats yet.</div>
+                        )}
+
+                        {sessions.map(s => (
+                            <div
+                                key={s.sessionId}
+                                className={`${styles.sessionItem} ${s.sessionId === sessionId ? styles.active : ''}`}
+                                onClick={() => switchToSession(s.sessionId)}
+                            >
+                                <div className={styles.sessionContent}>
+                                    <div className={styles.sessionTitle}>
+                                        {s.lastMessage ? (s.lastMessage.length > 40 ? s.lastMessage.slice(0, 40) + "…" : s.lastMessage) : "New chat"}
+                                    </div>
+                                    <div className={styles.sessionTime}>
+                                        {s.lastTime ? new Date(s.lastTime).toLocaleString() : ""}
+                                    </div>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteSession(s.sessionId);
+                                        }}
+                                        className={styles.deleteBtn}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </aside>
+
+                {/* Chat Container */}
                 <div className={styles.chatContainer}>
                     <div className={styles.chatBox} ref={chatBoxRef}>
                         {messages.map((msg, idx) => (
@@ -138,7 +286,7 @@ Keep your tone conversational, short, and supportive.
                                 onChange={e => setInput(e.target.value)}
                                 maxLength={500}
                             />
-                            <div className={styles.charCount}>{input.length}/500</div>
+                            <div className={styles.charCount}>{input.length}/500 characters</div>
                         </div>
                         <button className={styles.sendBtn} type="submit">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
