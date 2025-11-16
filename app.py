@@ -26,7 +26,7 @@ app.add_middleware(
 # -------------------------------------------------------
 # MONGO CONNECTION
 # -------------------------------------------------------
-MONGO_URI = "mongodb+srv://rakshit186005:i3MtBAMT2jMbXisu@ChatApp.il2chd5.mongodb.net/"
+MONGO_URI = process.env.MONGO_URL
 
 client = MongoClient(MONGO_URI)
 
@@ -222,3 +222,4 @@ def analyze(data: InputText):
 # -------------------------------------------------------
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
