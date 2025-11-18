@@ -1,4 +1,3 @@
-Next.js_Front_End
 # 🧠 MindWell – AI Mental Wellness Assistant  
 ### *Emotion Analysis • Crisis Detection • Mood Tracking • Emergency SMS Alerts*
 
@@ -244,7 +243,7 @@ TWILIO_PHONE_NUMBER=
 # 🧑‍💻 Author
 
 **Rakshit**
-AI Developer | Mental Wellness Tools | Full-stack Engineer
+Full-stack Developer
 
 GitHub: [https://github.com/rakshit1862005](https://github.com/rakshit1862005)
 
@@ -256,6 +255,3 @@ This project integrates **AI**, **mental health safety**, and **real-world emerg
 
 If you like this project, star ⭐ the repo!
 
-
-
-main
