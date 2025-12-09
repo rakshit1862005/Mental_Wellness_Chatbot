@@ -1,4 +1,3 @@
-'use server'
 import { connectdb } from "@/dbConfig/dbconfig";
 import User from "@/models/usermodel";
 
