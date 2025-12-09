@@ -74,9 +74,7 @@ export default function CopingPage() {
         ]
     };
 
-    const handleTryStrategy = (strategy) => {
-        alert(`Starting: ${strategy.title}\n\nThis would open a guided experience for this strategy.`);
-    };
+
 
     return (
         <div className={styles.pageContainer}>
@@ -177,17 +175,6 @@ export default function CopingPage() {
                                     ))}
                                 </ul>
                             </div>
-
-                            <button 
-                                className={styles.tryBtn}
-                                onClick={() => handleTryStrategy(strategy)}
-                            >
-                                Try This Strategy
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                                </svg>
-                            </button>
                         </div>
                     ))}
                 </div>
