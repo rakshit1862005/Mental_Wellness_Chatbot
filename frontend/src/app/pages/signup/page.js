@@ -248,7 +248,7 @@ export default function SignUpPage() {
                 <div className={styles.authFooter}>
                     <p>
                         Already have an account?{" "}
-                        <Link href="/login" className={styles.link}>
+                        <Link href="/pages/login" className={styles.link}>
                             Sign in
                         </Link>
                     </p>

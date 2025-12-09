@@ -25,6 +25,9 @@ export default function Page() {
 
     const [chartData, setChartData] = useState([]);
 
+    // store full user data for export
+    const [user, setUser] = useState(null);
+
     useEffect(() => {
         const e = typeof window !== "undefined" ? localStorage.getItem("username") : null;
         if (e) {
@@ -37,59 +40,52 @@ export default function Page() {
 
     async function fetchUserEntries(email) {
         setLoading(true);
-
         try {
             const res = await fetch(`/api/users/user?email=${encodeURIComponent(email)}`);
-            
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
-            
-            const user = await res.json();
 
-            console.log("Fetched user data:", user);
+            const userData = await res.json();
+            setUser(userData);
 
-            // ⭐ FIX: USE it.score NOT it.moodScore
-            const items = (user.moodHistory || []).map(it => ({
-                moodScore: Number(it.score),      // FIXED
-                createdAt: new Date(it.createdAt)  // FIXED
+            const items = (userData.moodHistory || []).map(it => ({
+                moodScore: Number(it.score),
+                createdAt: new Date(it.createdAt)
             }));
 
-            console.log("Processed mood items:", items);
-
             setEntries(items);
-
+            
             if (items.length > 0) {
-                // Average mood
                 const avg = items.reduce((sum, x) => sum + x.moodScore, 0) / items.length;
                 setAvgMood(avg.toFixed(1));
 
-                // Journal count (total messages)
-                setJournalCount((user.messages || []).length);
+                setJournalCount((userData.messages || []).length);
 
-                // Trend
                 if (items.length >= 2) {
-                    const delta = items[items.length - 1].moodScore - items[items.length - 2].moodScore;
+                    const delta = items[items.length - 1].moodScore -
+                                  items[items.length - 2].moodScore;
                     setTrendDelta(delta.toFixed(1));
                 } else {
                     setTrendDelta(0);
                 }
 
-                // Last 7 days chart
                 const last7 = items.slice(-7).map(it => {
                     const d = it.createdAt;
-                    const label = `${d.getDate()} ${d.toLocaleString("default", { month: "short" })}`;
+                    const label = `${d.getDate()} ${d.toLocaleString("default", {
+                        month: "short"
+                    })}`;
                     return { date: label, mood: it.moodScore };
                 });
-
-                console.log("Chart data:", last7);
                 setChartData(last7);
+
             } else {
                 setAvgMood(null);
                 setJournalCount(0);
                 setTrendDelta(0);
                 setChartData([]);
             }
+
         } catch (err) {
             console.error("Error fetching user entries:", err);
         } finally {
@@ -97,11 +93,34 @@ export default function Page() {
         }
     }
 
-    const finalChartData = chartData.length
-        ? chartData
-        : [
-            { date: "No Data", mood: 0 }
-        ];
+    // 🔹 Export functionality
+    function exportData() {
+        if (!user) {
+            alert("No data to export");
+            return;
+        }
+
+        const dataToExport = {
+            user: email,
+            moodHistory: user.moodHistory || [],
+            crisisHistory: user.crisisHistory || [], // modify if different
+            messages: user.messages || [],
+            exportedAt: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(dataToExport, null, 2)], {
+            type: "application/json"
+        });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `wellness_data_${email}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+
+    const finalChartData = chartData.length ? chartData : [{ date: "No Data", mood: 0 }];
 
     return (
         <div>
@@ -115,8 +134,10 @@ export default function Page() {
                             <h1 className={styles.title}>Wellness Dashboard</h1>
                             <p className={styles.subtitle}>Track your mental wellness journey</p>
                         </div>
-                        <button className={styles.exportBtn}>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+
+                        <button className={styles.exportBtn} onClick={exportData}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" strokeWidth="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="7 10 12 15 17 10"></polyline>
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -129,6 +150,12 @@ export default function Page() {
                         <div className={`${styles.statCard} ${styles.blue}`}>
                             <div className={styles.statHeader}>
                                 <span>Average Mood</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" strokeWidth="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06
+                                    a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78
+                                    1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
                             </div>
                             <div className={styles.statValue}>
                                 {avgMood ? `${avgMood}/10` : loading ? "..." : "—"}
@@ -141,6 +168,12 @@ export default function Page() {
                         <div className={`${styles.statCard} ${styles.green}`}>
                             <div className={styles.statHeader}>
                                 <span>Journal Entries</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" strokeWidth="2">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4
+                                    19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                </svg>
                             </div>
                             <div className={styles.statValue}>{journalCount}</div>
                             <div className={styles.statLabel}>All time</div>
@@ -149,6 +182,12 @@ export default function Page() {
                         <div className={`${styles.statCard} ${styles.purple}`}>
                             <div className={styles.statHeader}>
                                 <span>Coping Strategies</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" strokeWidth="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <circle cx="12" cy="12" r="6"></circle>
+                                    <circle cx="12" cy="12" r="2"></circle>
+                                </svg>
                             </div>
                             <div className={styles.statValue}>{strategyCount}</div>
                             <div className={styles.statLabel}>Used</div>
@@ -157,6 +196,11 @@ export default function Page() {
                         <div className={`${styles.statCard} ${styles.teal}`}>
                             <div className={styles.statHeader}>
                                 <span>Mood Trend</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" strokeWidth="2">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                    <polyline points="17 6 23 6 23 12"></polyline>
+                                </svg>
                             </div>
                             <div className={styles.statValue}>
                                 {trendDelta >= 0 ? `+${trendDelta}` : trendDelta}
@@ -169,9 +213,18 @@ export default function Page() {
                 <div className={styles.chartSection}>
                     <div className={styles.chartHeader}>
                         <div className={styles.chartTitle}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" strokeWidth="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
                             7-Day Mood Trend
                         </div>
-                        <p className={styles.chartSubtitle}>Track mood patterns over the past week</p>
+                        <p className={styles.chartSubtitle}>
+                            Track mood patterns over the past week
+                        </p>
                     </div>
 
                     <ResponsiveContainer width="100%" height={350}>
@@ -186,8 +239,19 @@ export default function Page() {
                                 </linearGradient>
                             </defs>
 
-                            <XAxis dataKey="date" axisLine={false} tickLine={false} />
-                            <YAxis axisLine={false} tickLine={false} domain={[0, 10]} />
+                            <XAxis
+                                dataKey="date"
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{ fill: '#8896a8', fontSize: 13 }}
+                            />
+
+                            <YAxis
+                                axisLine={false}
+                                tickLine={false}
+                                domain={[0, 10]}
+                                tick={{ fill: '#8896a8', fontSize: 13 }}
+                            />
 
                             <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" vertical={false} />
 
@@ -196,8 +260,10 @@ export default function Page() {
                                     background: 'white',
                                     border: '1px solid #e0e0e0',
                                     borderRadius: '8px',
-                                    fontSize: '13px'
+                                    fontSize: '13px',
+                                    padding: '8px 12px'
                                 }}
+                                cursor={{ stroke: '#6b9bc3', strokeWidth: 1, strokeDasharray: '5 5' }}
                                 formatter={(value) => [value, 'Mood Score']}
                                 labelFormatter={(label) => `Date: ${label}`}
                             />

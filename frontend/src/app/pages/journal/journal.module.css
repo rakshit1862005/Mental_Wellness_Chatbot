@@ -1,0 +1,357 @@
+.pageContainer {
+    background: #eef2f7;
+    min-height: 100vh;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
+}
+
+.main {
+    padding: 120px 40px 40px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.content {
+    width: 100%;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 12px 0;
+}
+
+.header p {
+    font-size: 1rem;
+    color: #8896a8;
+    margin: 0;
+}
+
+.twoColumn {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 24px;
+}
+
+.leftColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.cardHeader svg {
+    color: #6b9bc3;
+}
+
+.cardHeader h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.cardSubtitle {
+    color: #8896a8;
+    font-size: 0.9rem;
+    margin: 0 0 20px 0;
+}
+
+.categoryButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.categoryBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #f8f9fa;
+    border: 1px solid #e0e7ed;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.categoryBtn:hover {
+    background: #e8edf2;
+}
+
+.categoryBtn.active {
+    background: #6b9bc3;
+    color: white;
+    border-color: #6b9bc3;
+}
+
+.categoryBtn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.promptCard {
+    background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #d0e7f0;
+}
+
+.promptHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.promptHeader h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.newPromptBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: white;
+    border: 1px solid #d0e7f0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.newPromptBtn:hover {
+    background: #f8f9fa;
+}
+
+.promptTag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #ff006e;
+    color: white;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-transform: lowercase;
+}
+
+.promptText {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #2c3e50;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.reflectionCard {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.reflectionCard h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 8px 0;
+}
+
+.reflectionSubtitle {
+    color: #8896a8;
+    font-size: 0.9rem;
+    margin: 0 0 16px 0;
+}
+
+.reflectionInput {
+    width: 100%;
+    border: 1px solid #e0e7ed;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.95rem;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
+    color: #2c3e50;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.reflectionInput:focus {
+    outline: none;
+    border-color: #6b9bc3;
+    box-shadow: 0 0 0 3px rgba(107, 155, 195, 0.1);
+}
+
+.reflectionFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.charCount {
+    font-size: 0.85rem;
+    color: #8896a8;
+}
+
+.saveBtn {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #6b9bc3 0%, #9fc5e8 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.saveBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(107, 155, 195, 0.3);
+}
+
+.entriesCard {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    height: fit-content;
+}
+
+.noEntries {
+    text-align: center;
+    padding: 60px 20px;
+    color: #8896a8;
+}
+
+.noEntries svg {
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.noEntries p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #5a6c7d;
+    margin: 0 0 4px 0;
+}
+
+.noEntries span {
+    font-size: 0.9rem;
+}
+
+.entriesList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.entryItem {
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #6b9bc3;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.entryItem:hover {
+    background: #e8edf2;
+    transform: translateX(4px);
+}
+
+.entryHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.entryCategory {
+    padding: 3px 10px;
+    background: #6b9bc3;
+    color: white;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.entryDate {
+    font-size: 0.8rem;
+    color: #8896a8;
+}
+
+.entryText {
+    font-size: 0.9rem;
+    color: #2c3e50;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+    .twoColumn {
+        grid-template-columns: 1fr;
+    }
+
+    .rightColumn {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .main {
+        padding: 100px 20px 40px 20px;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .categoryButtons {
+        gap: 8px;
+    }
+
+    .categoryBtn {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
+}

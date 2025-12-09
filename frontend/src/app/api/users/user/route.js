@@ -15,16 +15,13 @@ export async function GET(req) {
     const moodCollection = mongoose.connection.collection("mood");
     const chatCollection = mongoose.connection.collection("chat");
 
-    // ⭐ Fetch mood document
     const moodDoc = await moodCollection.findOne({ email });
     console.log(moodDoc);
 
-    // ⭐ Fetch all chats for user (optional but dashboard expects messages)
     const chats = await chatCollection.find({ email })
         .sort({ createdAt: 1 })
         .toArray();
 
-    // If no mood doc yet
     if (!moodDoc) {
         return NextResponse.json({
             moodHistory: [],
@@ -34,7 +31,6 @@ export async function GET(req) {
         });
     }
 
-    // ⭐ MUST return EXACT structure dashboard expects
     return NextResponse.json({
         moodHistory: moodDoc.moodHistory || [],      // [{ score, createdAt }]
         crisisHistory: moodDoc.crisisHistory || [],

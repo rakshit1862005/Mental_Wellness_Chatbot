@@ -1,40 +1,192 @@
-.main{
-    padding: 0;
-    margin: 0;
+.main {
+    width: 100%;
+    height: 80px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
     display: flex;
-    background-color: #f9f8fe;
-    width: 100vw;
-    height: 10vh;
-    z-index: 9;
+    align-items: center;
+    padding: 0 40px;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
+    box-sizing: border-box;
+    overflow: visible;
 }
 
-.logocont{
+.logo {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.logocont {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    width: 40%;
+    gap: 4px;
 }
 
-.logocont h2{
-    font-family: "Noto Sans";
+.logocont h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
     margin: 0;
-    padding: 0;
-    font-size: 1.8rem;
-    font-weight: 500;
 }
 
-.logocont h3{
-    font-family: "Noto Sans";
-    margin: 0;
-    padding: 0;
-    font-size: 1rem;
+.logocont h3 {
+    font-size: 0.9rem;
     font-weight: 400;
-    filter: opacity(0.6);
+    color: #6b9bc3;
+    margin: 0;
+    min-height: 20px;
 }
 
+/* Profile Section */
+.profileContainer {
+    position: relative;
+    margin-left: 20px;
+    flex-shrink: 0;
+}
 
-.logo{
-    height: 100%;
-    width: 8%;
+.profileIcon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #6b9bc3 0%, #9fc5e8 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.profileIcon:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(107, 155, 195, 0.3);
+}
+
+.dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    min-width: 220px;
+    padding: 8px;
+    z-index: 1001;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdownEmail {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    color: #2c3e50;
+    font-size: 0.85rem;
+    word-break: break-word;
+}
+
+.dropdownEmail svg {
+    min-width: 16px;
+    color: #6b9bc3;
+}
+
+.dropdownDivider {
+    height: 1px;
+    background: #e0e7ed;
+    margin: 4px 0;
+}
+
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #2c3e50;
+    font-size: 0.9rem;
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.dropdownItem:hover {
+    background: #f0f4f8;
+    color: #6b9bc3;
+}
+
+.dropdownItem svg {
+    min-width: 16px;
+    color: currentColor;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main {
+        padding: 0 20px;
+        height: 70px;
+    }
+
+    .logo {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+    }
+
+    .logocont h2 {
+        font-size: 1.2rem;
+    }
+
+    .logocont h3 {
+        font-size: 0.75rem;
+    }
+
+    .profileIcon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .dropdown {
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logocont h3 {
+        display: none;
+    }
+
+    .dropdown {
+        right: -10px;
+    }
 }

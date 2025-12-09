@@ -26,7 +26,7 @@ app.add_middleware(
 # -------------------------------------------------------
 # MONGO CONNECTION
 # -------------------------------------------------------
-MONGO_URI = process.env.MONGO_URL
+MONGO_URI = "mongodb+srv://rakshit186005:i3MtBAMT2jMbXisu@ChatApp.il2chd5.mongodb.net/"
 
 client = MongoClient(MONGO_URI)
 
