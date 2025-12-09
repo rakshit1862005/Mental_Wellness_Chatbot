@@ -91,7 +91,6 @@ export async function POST(req) {
             return NextResponse.json({ reply: "Empty message." });
         }
 
-        // ⭐ CALL FASTAPI
         const analysis = await fetch("http://localhost:8000/analyze", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -100,7 +99,6 @@ export async function POST(req) {
 
         const { intent, emotion, mood, crisis, context } = analysis;
 
-        // ⭐ Build dynamic system prompt
         const AI_CONTEXT = `
 You are a compassionate emotional-support AI.
 Use the analysis below to understand the user's emotional state.
@@ -113,6 +111,7 @@ Analysis:
 - Extracted Context: ${context}
 
 Guidelines:
+- Give elaborated Answers
 - Be warm, validating, supportive.
 - Never give medical or clinical advice.
 - If crisisScore > 70, gently encourage reaching someone trusted.
@@ -138,7 +137,7 @@ Guidelines:
 
         const chat = model.startChat({
             history: formattedHistory,
-            generationConfig: { temperature: 0.7, maxOutputTokens: 400 },
+            generationConfig: { temperature: 0.7, maxOutputTokens: 1017 },
         });
 
         const result = await chat.sendMessage(message);
@@ -149,7 +148,6 @@ Guidelines:
         history.push(new AIMessage(reply));
         if (history.length > 20) history.splice(0, history.length - 20);
 
-        // ⭐ SAVE TO DB (restoring your old behavior)
         await Chat.create({
             email,
             sessionId,
@@ -166,7 +164,6 @@ Guidelines:
             time: new Date(),
         });
 
-        // ⭐ Also store mood/crisis trends
         await Mood.create({
             email,
             sessionId,

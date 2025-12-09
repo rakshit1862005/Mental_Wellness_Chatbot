@@ -413,3 +413,54 @@
         max-width: 85%;
     }
 }
+
+/* ... Your existing styles ... */
+
+/* MARKDOWN STYLING */
+.markdownContent {
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Fix paragraphs inside the bubble so they don't have huge gaps */
+.markdownContent p {
+  margin: 0 0 10px 0;
+}
+.markdownContent p:last-child {
+  margin-bottom: 0;
+}
+
+/* Fix list styling (bullets and numbers) */
+.markdownContent ul, 
+.markdownContent ol {
+  margin: 5px 0 10px 20px; /* Indent lists slightly */
+  padding: 0;
+  list-style-position: outside; /* Ensures bullets are outside the text block */
+}
+
+.markdownContent li {
+  margin-bottom: 5px;
+}
+
+/* Bold text */
+.markdownContent strong {
+  font-weight: 600;
+  color: inherit; /* Keeps the color consistent with your theme */
+}
+
+/* Headings (if Gemini sends them) */
+.markdownContent h1, 
+.markdownContent h2, 
+.markdownContent h3 {
+  margin: 10px 0 5px 0;
+  font-size: 1.1em;
+  font-weight: 700;
+}
+
+/* Code blocks (optional, if you expect code) */
+.markdownContent pre {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
